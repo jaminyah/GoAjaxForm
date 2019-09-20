@@ -23,7 +23,6 @@ func receiveAjax(w http.ResponseWriter, r *http.Request) {
 	// Send back data to client
 	fmt.Fprintf(w, "<h1>Hello: %s</h1><br/>Msg: %s", r.FormValue("username"), r.FormValue("message"))
 	
-
  }
 
 func main() {

@@ -7,7 +7,7 @@
         <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>
     </head>
     <body>
-        <form action="/receive" method="post" id="idForm">
+        <form action="" method="post" id="idForm">
             <label for="name">Your Name:</label>
             <input type="text" name="username" id="id_username">
             <label for="msg">Message:</label>
@@ -25,7 +25,7 @@
                 var form = $(this);
                 $.ajax({
                     type: form.attr('method'),
-                    url: form.attr('action'),
+                    url: "/receive",
                     contentType: 'application/x-www-form-urlencoded',
                     data: form.serialize(),
                     success: function(data) {
