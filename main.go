@@ -21,7 +21,7 @@ func receiveAjax(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Message body: %s\n", r.FormValue("message"))
 
 	// Send back data to client
-	fmt.Fprintf(w, "<h1>Hello: %s</h1><br/>Msg: %s", r.FormValue("username"), r.FormValue("message"))
+	fmt.Fprintf(w, "%s: <span> %s</span><br/>", r.FormValue("username"), r.FormValue("message"))
 	
  }
 

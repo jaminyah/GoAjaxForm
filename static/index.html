@@ -4,21 +4,22 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./styles/style.css">
-        <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>
+       <!-- <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script> -->
+       <script src="./scripts/jquery-3.4.1.min.js"></script>
     </head>
     <body>
-        <form action="" method="post" id="idForm">
+        <form action="" method="post" id="comment-form">
             <label for="name">Your Name:</label>
-            <input type="text" name="username" id="id_username">
+            <input type="text" name="username" id="username">
             <label for="msg">Message:</label>
-            <textarea name="message" id="id_message" placeholder="Your comments"></textarea>
-            <input type="submit" value="Send">
+            <textarea name="message" id="message" placeholder="Your comments"></textarea>
+            <input type="submit" value="Publish">
         </form>
 
         <div id="myData"></div>
 
         <script>
-            $('#idForm').submit(function(e) {
+            $('#comment-form').submit(function(e) {
 
                 e.preventDefault();         // avoid execute the actual submit form
 
@@ -29,8 +30,10 @@
                     contentType: 'application/x-www-form-urlencoded',
                     data: form.serialize(),
                     success: function(data) {
-                        alert(data);
-                        $('#myData').html(data)
+                        //alert(data);
+                        $("#username").val("");
+                        $("#message").val("");
+                        $("#myData").html(data)
                         console.log('Form submittion success.');
                         console.log(data);
                     },
