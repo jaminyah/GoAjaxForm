@@ -21,7 +21,7 @@
         <script>
             $('#comment-form').submit(function(e) {
 
-                e.preventDefault();         // avoid execute the actual submit form
+                e.preventDefault();         // avoid executing the actual submit form
 
                 var form = $(this);
                 $.ajax({
@@ -33,9 +33,10 @@
                         //alert(data);
                         $("#username").val("");
                         $("#message").val("");
-                        $("#myData").html(data)
-                        console.log('Form submittion success.');
-                        console.log(data);
+                        //$("#myData").html(data)
+                       var json_data = JSON.parse(data);
+                        console.log('Received data success.');
+                        console.log(json_data);
                     },
                     error: function(data) {
                         console.log('There is an error');
