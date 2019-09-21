@@ -75,9 +75,7 @@ func receiveAjax(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s\n", json_str)
 	
 	// Send back data to client
-	//fmt.Fprintf(w, "%s: <span> %s</span><br/>", r.FormValue("username"), r.FormValue("message"))
-	fmt.Fprint(w, json_str)
-	
+	w.Write(json_str)
  }
 
 func main() {
