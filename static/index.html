@@ -3,15 +3,19 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ajax form - Go backend</title>
         <link rel="stylesheet" href="./styles/style.css">
-       <!-- <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script> -->
-       <script src="./scripts/jquery-3.4.1.min.js"></script>
+       <!-- <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>-->
+        <!-- Yes. For personal projects it is best to pull down
+         the version of jQuery you want directly into your project.
+          Also version 1.n.n of jQuery is way too old -->
+       <script src="scripts/jquery-3.4.1.min.js"></script>
     </head>
     <body>
-        <form action="" method="post" id="comment-form">
-            <label for="name">Your Name:</label>
+        <form action="#" method="post" id="comment-form">
+            <label for="username">Your Name:</label>
             <input type="text" name="username" id="username">
-            <label for="msg">Message:</label>
+            <label for="message">Message:</label>
             <textarea name="message" id="message" placeholder="Your comments"></textarea>
             <input type="submit" value="Publish">
         </form>
@@ -33,12 +37,12 @@
                         //alert(data);
                         $("#username").val("");
                         $("#message").val("");
-                        $("#myData").html(data)
-                        console.log('Form submittion success.');
+                        $("#myData").html(data);
+                        console.log('Form submission success.');
                         console.log(data);
                     },
                     error: function(data) {
-                        console.log('There is an error');
+                        console.log('There was an error');
                         console.log(data);
                     }
                 });
