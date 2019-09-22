@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/comment.css">
        <!-- <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script> -->
        <script src="./scripts/jquery-3.4.1.min.js"></script>
     </head>
@@ -16,7 +17,7 @@
             <input type="submit" value="Publish">
         </form>
 
-        <div id="myData"></div>
+        <div id="comment-area"></div>
 
         <script>
             $('#comment-form').submit(function(e) {
@@ -30,13 +31,25 @@
                     contentType: 'application/x-www-form-urlencoded',
                     data: form.serialize(),
                     success: function(data) {
-                        //alert(data);
                         $("#username").val("");
                         $("#message").val("");
-                        //$("#myData").html(data)
                        var json_data = JSON.parse(data);
                         console.log('Received data success.');
                         console.log(json_data);
+                       // listComments(json_data);
+                       var comment = "";
+                       var list = $("<ul>");
+ 
+                        for (var i = 0; i < json_data.length; i++) {
+                            comment = "<img src='./images/avatar.png'/>" +
+                              "<h3>" + json_data[i]['name'] + "</h3>" +
+                              "<h4>" + json_data[i]['date'] + "</h4>" +
+                              "<p>" + json_data[i]['comment'] + "</p>";
+                    
+                            var item = $("<li>").html(comment);
+                            list.append(item);
+                        }
+                        $("#comment-area").html(list);
                     },
                     error: function(data) {
                         console.log('There is an error');
@@ -44,6 +57,7 @@
                     }
                 });
             });
+ 
         </script>
     </body>
 </html>
