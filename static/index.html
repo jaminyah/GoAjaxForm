@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./styles/style.css">
         <link rel="stylesheet" href="./styles/comment.css">
+        <link rel="stylesheet" href="./styles/loader.css">
        <!-- <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script> -->
        <script src="./scripts/jquery-3.4.1.min.js"></script>
     </head>
@@ -17,12 +18,14 @@
             <input type="submit" value="Publish">
         </form>
 
+        <div id="loader"></div>
         <div id="comment-area"></div>
 
         <script>
             $('#comment-form').submit(function(e) {
 
                 e.preventDefault();         // avoid executing the actual submit form
+                document.getElementById("loader").style.display = "block";
 
                 var form = $(this);
                 $.ajax({
@@ -31,6 +34,7 @@
                     contentType: 'application/x-www-form-urlencoded',
                     data: form.serialize(),
                     success: function(data) {
+                        document.getElementById("loader").style.display = "none";
                         $("#username").val("");
                         $("#message").val("");
                         var json_data = JSON.parse(data);
@@ -62,6 +66,7 @@
                     type: "get",
                     url: "/comments",
                     success: function(data) {
+                        document.getElementById("loader").style.display = "none";
                         var json_data = JSON.parse(data);
                         console.log('Received data success.');
                         console.log(json_data);
