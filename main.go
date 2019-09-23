@@ -71,17 +71,60 @@ func receiveAjax(w http.ResponseWriter, r *http.Request) {
 		user_comments = append(user_comments, user_comment)
 	}
 
+	rows.Close()
+
 	json_str, _ := json.Marshal(user_comments)
 	fmt.Printf("%s\n", json_str)
 	
 	// Send back data to client
 	w.Write(json_str)
+
+	database.Close()
+ }
+
+ func commentsAjax(w http.ResponseWriter, r *http.Request) {
+	
+	// Setup database
+	database, _ := sql.Open("sqlite3", "./wxalert.db")
+
+	 // Read database
+	rows, _ := database.Query("SELECT id, username, comment, date FROM comments ORDER BY id DESC LIMIT 0, 10")
+
+	var db_id int
+	var db_name string
+	var db_message string
+	var db_timestamp string
+	var user_comment UserComment
+	var user_comments []UserComment
+
+	for rows.Next() {
+		rows.Scan(&db_id, &db_name, &db_message, &db_timestamp)
+		//fmt.Println(strconv.Itoa(id) + ": " + first + " " + last)
+	
+		user_comment.Id = db_id
+		user_comment.Name = db_name
+		user_comment.Message = db_message
+		user_comment.Timestamp = db_timestamp
+		user_comments = append(user_comments, user_comment)
+	}
+
+	rows.Close()
+
+	json_str, _ := json.Marshal(user_comments)
+	fmt.Printf("%s\n", json_str)
+	
+	// Send back data to client
+	w.Write(json_str)
+
+	database.Close()
  }
 
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("static")))
 
     http.HandleFunc("/receive", receiveAjax)
+
+	http.HandleFunc("/comments", commentsAjax)
 
 	fmt.Printf("Starting HTTP server...\n")
     if err := http.ListenAndServe(":8088", nil); err != nil {

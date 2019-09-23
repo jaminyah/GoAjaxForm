@@ -33,12 +33,11 @@
                     success: function(data) {
                         $("#username").val("");
                         $("#message").val("");
-                       var json_data = JSON.parse(data);
+                        var json_data = JSON.parse(data);
                         console.log('Received data success.');
                         console.log(json_data);
-                       // listComments(json_data);
-                       var comment = "";
-                       var list = $("<ul>");
+                        var comment = "";
+                        var list = $("<ul>");
  
                         for (var i = 0; i < json_data.length; i++) {
                             comment = "<img src='./images/avatar.png'/>" +
@@ -51,9 +50,38 @@
                         }
                         $("#comment-area").html(list);
                     },
-                    error: function(data) {
+                    error: function(json_data) {
                         console.log('There is an error');
-                        console.log(data);
+                        console.log(json_data);
+                    }
+                });
+            });
+
+            $(document).ready(function() {
+                $.ajax({
+                    type: "get",
+                    url: "/comments",
+                    success: function(data) {
+                        var json_data = JSON.parse(data);
+                        console.log('Received data success.');
+                        console.log(json_data);
+                        var comment = "";
+                        var list = $("<ul>");
+ 
+                        for (var i = 0; i < json_data.length; i++) {
+                            comment = "<img src='./images/avatar.png'/>" +
+                              "<h3>" + json_data[i]['name'] + "</h3>" +
+                              "<h4>" + json_data[i]['date'] + "</h4>" +
+                              "<p>" + json_data[i]['comment'] + "</p>";
+                    
+                            var item = $("<li>").html(comment);
+                            list.append(item);
+                        }
+                        $("#comment-area").html(list);
+                    },
+                    error: function(json_data) {
+                        console.log('There is an error');
+                        console.log(json_data);
                     }
                 });
             });
