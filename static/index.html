@@ -27,7 +27,7 @@
                 var form = $(this);
                 $.ajax({
                     type: form.attr('method'),
-                    url: "/receive",
+                    url: "/submit",
                     contentType: 'application/x-www-form-urlencoded',
                     data: form.serialize(),
                     success: function(data) {

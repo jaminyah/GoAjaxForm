@@ -18,7 +18,7 @@ type UserComment struct {
 	Timestamp string	`json:"date"`
 }
 
-func receiveAjax(w http.ResponseWriter, r *http.Request) {
+func submitAjax(w http.ResponseWriter, r *http.Request) {
 
 	// Setup database
 	database, _ := sql.Open("sqlite3", "./wxalert.db")
@@ -82,7 +82,7 @@ func receiveAjax(w http.ResponseWriter, r *http.Request) {
 	database.Close()
  }
 
- func commentsAjax(w http.ResponseWriter, r *http.Request) {
+ func fetchComments(w http.ResponseWriter, r *http.Request) {
 	
 	// Setup database
 	database, _ := sql.Open("sqlite3", "./wxalert.db")
@@ -122,9 +122,9 @@ func receiveAjax(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("static")))
 
-    http.HandleFunc("/receive", receiveAjax)
+    http.HandleFunc("/submit", submitAjax)
 
-	http.HandleFunc("/comments", commentsAjax)
+	http.HandleFunc("/comments", fetchComments)
 
 	fmt.Printf("Starting HTTP server...\n")
     if err := http.ListenAndServe(":8088", nil); err != nil {
