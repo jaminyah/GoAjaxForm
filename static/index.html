@@ -37,26 +37,12 @@
                         document.getElementById("loader").style.display = "none";
                         $("#username").val("");
                         $("#message").val("");
-                        var json_data = JSON.parse(data);
-                        console.log('Received data success.');
-                        console.log(json_data);
-                        var comment = "";
-                        var list = $("<ul>");
- 
-                        for (var i = 0; i < json_data.length; i++) {
-                            comment = "<img src='./images/avatar.png'/>" +
-                              "<h3>" + json_data[i]['name'] + "</h3>" +
-                              "<h4>" + json_data[i]['date'] + "</h4>" +
-                              "<p>" + json_data[i]['comment'] + "</p>";
-                    
-                            var item = $("<li>").html(comment);
-                            list.append(item);
-                        }
-                        $("#comment-area").html(list);
+                        var comments = JSON.parse(data);
+                        displayComments(comments);
                     },
-                    error: function(json_data) {
+                    error: function(data) {
                         console.log('There is an error');
-                        console.log(json_data);
+                        console.log(data);
                     }
                 });
             });
@@ -67,29 +53,33 @@
                     url: "/comments",
                     success: function(data) {
                         document.getElementById("loader").style.display = "none";
-                        var json_data = JSON.parse(data);
-                        console.log('Received data success.');
-                        console.log(json_data);
-                        var comment = "";
-                        var list = $("<ul>");
- 
-                        for (var i = 0; i < json_data.length; i++) {
-                            comment = "<img src='./images/avatar.png'/>" +
-                              "<h3>" + json_data[i]['name'] + "</h3>" +
-                              "<h4>" + json_data[i]['date'] + "</h4>" +
-                              "<p>" + json_data[i]['comment'] + "</p>";
-                    
-                            var item = $("<li>").html(comment);
-                            list.append(item);
-                        }
-                        $("#comment-area").html(list);
+                        var comments = JSON.parse(data);
+                        displayComments(comments);
                     },
-                    error: function(json_data) {
+                    error: function(data) {
                         console.log('There is an error');
-                        console.log(json_data);
+                        console.log(data);
                     }
                 });
             });
+
+            function displayComments(json_data) {
+                console.log('Received data success.');
+                console.log(json_data);
+                var comment = "";
+                var list = $("<ul>");
+ 
+                for (var i = 0; i < json_data.length; i++) {
+                    comment = "<img src='./images/avatar.png'/>" +
+                    "<h3>" + json_data[i]['name'] + "</h3>" +
+                    "<h4>" + json_data[i]['date'] + "</h4>" +
+                    "<p>" + json_data[i]['comment'] + "</p>";
+                    
+                    var item = $("<li>").html(comment);
+                    list.append(item);
+                }
+                $("#comment-area").html(list);
+            }
  
         </script>
     </body>
