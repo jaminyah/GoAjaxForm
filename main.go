@@ -11,6 +11,9 @@ import (
 	_"github.com/mattn/go-sqlite3"
 )
 
+var database, db_err = sql.Open("sqlite3", "./wxalert.db")
+
+
 type UserComment struct {
 	Id int				`json:"id"`
 	Name string			`json:"name"`
@@ -21,9 +24,9 @@ type UserComment struct {
 func submitAjax(w http.ResponseWriter, r *http.Request) {
 
 	// Setup database
-	database, _ := sql.Open("sqlite3", "./wxalert.db")
-	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, username TEXT, comment TEXT, date TEXT)")
-	statement.Exec()	
+	//database, _ := sql.Open("sqlite3", "./wxalert.db")
+	//statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, username TEXT, comment TEXT, date TEXT)")
+	//statement.Exec()	
 	
 	fmt.Println("Received ajax data.")
 
@@ -47,7 +50,7 @@ func submitAjax(w http.ResponseWriter, r *http.Request) {
 	user_message := r.FormValue("message")
 	
 	// Insert into database
-	statement, _ = database.Prepare("INSERT INTO comments (username, comment, date) VALUES (?, ?, ?)")
+	statement, _ := database.Prepare("INSERT INTO comments (username, comment, date) VALUES (?, ?, ?)")
 	statement.Exec(user_name, user_message, now_time)
 
 	// Read database
@@ -70,7 +73,7 @@ func submitAjax(w http.ResponseWriter, r *http.Request) {
 		user_comments = append(user_comments, user_comment)
 	}
 
-	rows.Close()
+	defer rows.Close()
 
 	json_str, _ := json.Marshal(user_comments)
 	fmt.Printf("%s\n", json_str)
@@ -78,13 +81,13 @@ func submitAjax(w http.ResponseWriter, r *http.Request) {
 	// Send back data to client
 	w.Write(json_str)
 
-	database.Close()
  }
+
 
  func fetchComments(w http.ResponseWriter, r *http.Request) {
 	
 	// Setup database
-	database, _ := sql.Open("sqlite3", "./wxalert.db")
+	// database, _ := sql.Open("sqlite3", "./wxalert.db")
 
 	 // Read database
 	rows, _ := database.Query("SELECT id, username, comment, date FROM comments ORDER BY id DESC LIMIT 0, 10")
@@ -106,7 +109,7 @@ func submitAjax(w http.ResponseWriter, r *http.Request) {
 		user_comments = append(user_comments, user_comment)
 	}
 
-	rows.Close()
+	defer rows.Close()
 
 	json_str, _ := json.Marshal(user_comments)
 	fmt.Printf("%s\n", json_str)
@@ -114,10 +117,19 @@ func submitAjax(w http.ResponseWriter, r *http.Request) {
 	// Send back data to client
 	w.Write(json_str)
 
-	database.Close()
  }
 
 func main() {
+
+
+	if db_err != nil {
+		log.Fatal(db_err)
+	}
+	defer database.Close()
+
+	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, username TEXT, comment TEXT, date TEXT)")
+	statement.Exec()	
+
 	http.Handle("/", http.FileServer(http.Dir("static")))
 
     http.HandleFunc("/submit", submitAjax)
@@ -125,7 +137,7 @@ func main() {
 	http.HandleFunc("/comments", fetchComments)
 
 	fmt.Printf("Starting HTTP server...\n")
-    if err := http.ListenAndServe(":8088", nil); err != nil {
-        log.Fatal(err)
+    if server_err := http.ListenAndServe(":8088", nil); server_err != nil {
+        log.Fatal(server_err)
     }
 }
