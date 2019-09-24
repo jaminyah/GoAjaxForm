@@ -10,13 +10,32 @@
        <script src="./scripts/jquery-3.4.1.min.js"></script>
     </head>
     <body>
-        <form action="" method="post" id="comment-form">
-            <label for="name">Your Name:</label>
-            <input type="text" name="username" id="username">
-            <label for="msg">Message:</label>
-            <textarea name="message" id="message" placeholder="Your comments"></textarea>
-            <input type="submit" value="Publish">
-        </form>
+        <div class="container">
+            <form action="" method="post" id="comment-form">
+                <div class="row">
+                    <div class="col-25">
+                        <label for="name">Name:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" name="username" id="username" placeholder="2 - 20 characters" pattern="[a-zA-Z][a-zA-Z-9-_\.]{1,20}" 
+                        required minlength="2" maxlength="20">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="msg">Message:</label>
+                    </div>
+                    <div class="col-75">
+                        <textarea type="text" name="message" id="message" placeholder="Alphanumeric only" pattern="[a-zA-Z0-9]+" 
+                        required minlength="3" maxlength="100">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" value="Publish">
+                </div>
+            </form>
+        </div>
 
         <div id="loader"></div>
         <div id="comment-area"></div>

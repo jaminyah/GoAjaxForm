@@ -62,7 +62,6 @@ func submitAjax(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		rows.Scan(&db_id, &db_name, &db_message, &db_timestamp)
-		//fmt.Println(strconv.Itoa(id) + ": " + first + " " + last)
 	
 		user_comment.Id = db_id
 		user_comment.Name = db_name
@@ -99,7 +98,6 @@ func submitAjax(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		rows.Scan(&db_id, &db_name, &db_message, &db_timestamp)
-		//fmt.Println(strconv.Itoa(id) + ": " + first + " " + last)
 	
 		user_comment.Id = db_id
 		user_comment.Name = db_name
