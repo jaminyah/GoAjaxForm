@@ -1,13 +1,17 @@
+/* Fetch comments from database handler. */
+
 package main
 
-/* Fetch database content http handler. */
+import (
+	"fmt"
+	"net/http"
+	"encoding/json"
+)
 
 func fetchComments(w http.ResponseWriter, r *http.Request) {
 	
-	// Setup database
-	// database, _ := sql.Open("sqlite3", "./wxalert.db")
 
-	 // Read database
+	// Read database
 	rows, _ := database.Query("SELECT id, username, comment, date FROM comments ORDER BY id DESC LIMIT 0, 10")
 
 	var db_id int
@@ -34,5 +38,4 @@ func fetchComments(w http.ResponseWriter, r *http.Request) {
 	
 	// Send back data to client
 	w.Write(json_str)
-
  }

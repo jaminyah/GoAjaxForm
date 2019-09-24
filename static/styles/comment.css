@@ -19,11 +19,13 @@ h4 {
 
 li img {
   float: left;
-  margin: 0 15px 0 0;
+  margin: 0 12px 0 0;
 }
  
 li p {
   font: 200 22px/1.5 Georgia, Times New Roman, serif;
+  margin: 4px;
+  padding: 4px;
 }
  
 li {
