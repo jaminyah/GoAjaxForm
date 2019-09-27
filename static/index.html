@@ -32,6 +32,14 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-25"></div>
+                    <div class="col-75">
+                       <!--<img src="blob" class="captcha-img" id="captcha-img">-->
+                        <input type="text" name="captcha-solution" id="captcha-solution">
+                        <input type="button" class="captcha-verify" value="Verify"></div>
+                    </div>
+                </div>
+                <div class="row">
                     <input type="submit" value="Publish">
                 </div>
             </form>
@@ -74,31 +82,91 @@
                         document.getElementById("loader").style.display = "none";
                         var comments = JSON.parse(data);
                         displayComments(comments);
+                        generateCaptcha();
                     },
                     error: function(data) {
                         console.log('There is an error');
                         console.log(data);
                     }
                 });
-            });
 
-            function displayComments(json_data) {
-                console.log('Received data success.');
-                console.log(json_data);
-                var comment = "";
-                var list = $("<ul>");
- 
-                for (var i = 0; i < json_data.length; i++) {
-                    comment = "<img src='./images/avatar.png'/>" +
-                    "<h3>" + json_data[i]['name'] + "</h3>" +
-                    "<h4>" + json_data[i]['date'] + "</h4>" +
-                    "<p>" + json_data[i]['comment'] + "</p>";
-                    
-                    var item = $("<li>").html(comment);
-                    list.append(item);
+                function displayComments(json_data) {
+                    console.log('Received data success.');
+                    console.log(json_data);
+                    var comment = "";
+                    var list = $("<ul>");
+    
+                    for (var i = 0; i < json_data.length; i++) {
+                        comment = "<img src='./images/avatar.png'/>" +
+                        "<h3>" + json_data[i]['name'] + "</h3>" +
+                        "<h4>" + json_data[i]['date'] + "</h4>" +
+                        "<p>" + json_data[i]['comment'] + "</p>";
+                        
+                        var item = $("<li>").html(comment);
+                        list.append(item);
+                    }
+                    $("#comment-area").html(list);
                 }
-                $("#comment-area").html(list);
-            }
+                
+                function generateCaptcha() {
+                    console.log('Generating captcha');
+                    const url = 'api/getCaptcha';
+                    var blob = "";
+                    let form = {
+                        CaptchaType: "character",
+                        Id: '',
+                        VerifyValue: '',
+                        ConfigAudio: {
+                            CaptchaLen: 6,
+                            Language: 'en'
+                        },
+                        ConfigCharacter: {
+                            Height: 60,
+                            Width: 240,
+                            Mode: 2,
+                            ComplexOfNoiseText: 0,
+                            ComplexOfNoiseDot: 0,
+                            IsUseSimpleFont: true,
+                            IsShowHollowLine: false,
+                            IsShowNoiseDot: false,
+                            IsShowNoiseText: false,
+                            IsShowSlimeLine: false,
+                            IsShowSineLine: false,
+                            CaptchaLen: 6,
+                            BgColor:{R:3, G:102, B:214, A:255}
+                        },
+                        ConfigDigit: {
+                            Height: 80,
+                            Width: 240,
+                            CaptchaLen: 5,
+                            MaxSkew: 0.7,
+                            DotCount: 80
+                        }
+                    }
+
+                    let fetchData = {
+                        method: 'post',
+                        body: JSON.stringify(form),
+                        headers: new Headers()
+                    }
+
+                    fetch(url, fetchData)
+                    .then(function(response){
+                        console.log(" fetch .then");
+                        return response.json();
+                    })
+                    .then(function(data){
+                        console.log(data.captchaId);
+                        form.Id = data.captchaId;
+                        blob = data.data;
+                    })
+                    .catch(function(error){
+                        console.log("fetch error: ")
+                        console.log(error);
+                    });
+
+                }
+            });
  
         </script>
     </body>
