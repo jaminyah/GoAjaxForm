@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col-25"></div>
                     <div class="col-75">
-                       <!--<img src="blob" class="captcha-img" id="captcha-img">-->
+                        <div id="captcha-img"></div>
                         <input type="text" name="captcha-solution" id="captcha-solution">
                         <input type="button" class="captcha-verify" value="Verify"></div>
                     </div>
@@ -159,12 +159,17 @@
                         console.log(data.captchaId);
                         form.Id = data.captchaId;
                         blob = data.data;
+                        displayCaptcha(data);
                     })
                     .catch(function(error){
                         console.log("fetch error: ")
                         console.log(error);
                     });
+                }
 
+                function displayCaptcha(captcha) {
+                    let captchaImage = "<h3>Verify you are human</h3>" + "Solve the math problem: <br/>" + "<img src='" + captcha.data + "'/>";
+                    $("#captcha-img").html(captchaImage);
                 }
             });
  
