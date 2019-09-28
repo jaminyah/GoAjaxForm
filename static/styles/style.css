@@ -8,7 +8,7 @@
     padding: 20px;
 }
 
-.col-25, .col-75, input[type=submit] {
+.col-25, .col-75, input[type=submit], input[type=number] {
     width: 100%;
 }
 
@@ -41,12 +41,20 @@ label {
     display: inline-block;
 }
 
-input[type=text], textarea {
+input[type=text], input[type=number], textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }
 
 textarea {

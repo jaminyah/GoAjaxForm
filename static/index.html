@@ -35,12 +35,12 @@
                     <div class="col-25"></div>
                     <div class="col-75">
                         <div id="captcha-img"></div>
-                        <input type="text" name="captcha-solution" id="captcha-solution">
-                        <input type="button" class="captcha-verify" value="Verify"></div>
+                        <input type="number" name="captcha-solution" id="captcha-solution" placeholder="math solution" step="any" required >
+                        <input type="button" class="captcha-verify" id="captcha-verify" value="Verify Value"></div>
                     </div>
                 </div>
                 <div class="row">
-                    <input type="submit" value="Publish">
+                    <input id="input-publish" type="submit" value="Publish">
                 </div>
             </form>
         </div>
@@ -75,6 +75,8 @@
             });
 
             $(document).ready(function() {
+               $("#input-publish").attr("disabled", true);
+
                 $.ajax({
                     type: "get",
                     url: "/comments",
