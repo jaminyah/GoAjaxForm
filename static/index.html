@@ -30,7 +30,7 @@
                         </textarea>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row captcha-row"> 
                     <div class="col-25"></div>
                     <div class="col-75">
                         <div id="captcha-img"></div>
@@ -107,6 +107,7 @@
                         var comments = JSON.parse(data);
                         displayComments(comments);
                         generateCaptcha();
+                        $(".captcha-row").show(2000);
                     },
                     error: function(data) {
                         console.log('There is an error');
@@ -116,7 +117,6 @@
             });
 
             $(document).ready(function() {
-               $("#publish").attr("disabled", true);
                $("#captcha-solution").val("");
 
                 $.ajax({
@@ -204,13 +204,13 @@
                 })
                 .then(function(data){
                     console.log(data.msg);
-                    showMessage(data.msg);
                     if (data.code == "success") {
-                        $("#captcha-verify").attr("disabled", true);
-                        $("#publish").attr("disabled", false);
+                        $(".captcha-row").hide("slow", function(){
+                            showMessage(data.msg);
+                        });
                     } else {
                         console.log(data.code);
-                        $("#publish").attr("disabled", true);
+                        showMessage(data.msg);
                         generateCaptcha();
                     }
                 })
@@ -227,7 +227,7 @@
                 $(".alert").fadeIn("slow", function() {
                     setTimeout(function(){
                         $(".alert").fadeOut("slow");
-                    }, 3000);
+                    }, 2000);
                 });
             }
  
