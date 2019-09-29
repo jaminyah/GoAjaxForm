@@ -1,3 +1,5 @@
+/* Mobile First */
+
 * {
     box-sizing: border-box;
 }
@@ -60,7 +62,7 @@ input[type=number]::-webkit-outer-spin-button {
 textarea {
     width: 100%;
     height: 150px;
-    padding: 12px 20px;
+    padding: 4px;
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
@@ -81,8 +83,20 @@ textarea {
     clear: both;
 }
 
-.el-form-item {
-    margin-bottom: 6px;
+.hide {
+    display: none;
+}
+
+.alert {
+    background: burlywood;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    padding: 20px;
+}
+
+.message {
+    color: black;
 }
 
 @media screen and (min-width: 600px) {
@@ -107,6 +121,7 @@ textarea {
         width: auto;
         float: left;
     } 
+
 
     input[type=text], textarea {
         resize: horizontal;

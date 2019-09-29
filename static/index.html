@@ -26,8 +26,7 @@
                         <label for="msg">Message:</label>
                     </div>
                     <div class="col-75">
-                        <textarea type="text" name="message" id="message" placeholder="Alphanumeric only" pattern="[a-zA-Z0-9]+" 
-                        required minlength="3" maxlength="100">
+                        <textarea name="message" id="message" pattern="[a-zA-Z0-9]+" required minlength="3" maxlength="100">
                         </textarea>
                     </div>
                 </div>
@@ -35,12 +34,20 @@
                     <div class="col-25"></div>
                     <div class="col-75">
                         <div id="captcha-img"></div>
-                        <input type="number" name="captcha-solution" id="captcha-solution" placeholder="math solution" step="any" required >
-                        <input type="button" class="captcha-verify" id="captcha-verify" value="Verify Value"></div>
+                        <input type="number" name="captcha-solution" id="captcha-solution" placeholder="Your math solution: " required >
+                        <input type="button" class="captcha-verify" id="captcha-verify" onclick="verifyCaptcha()" value="Verify Value"></div>
                     </div>
                 </div>
                 <div class="row">
-                    <input id="input-publish" type="submit" value="Publish">
+                    <div class="col-25"></div>
+                    <div class="col-75">
+                        <div class="alert hide">
+                            <div class="message"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" id="publish" value="Publish">
                 </div>
             </form>
         </div>
@@ -49,6 +56,38 @@
         <div id="comment-area"></div>
 
         <script>
+            var captchaForm = {
+                    CaptchaType: "character",
+                    Id: '',
+                    VerifyValue: '',
+                    ConfigAudio: {
+                        CaptchaLen: 6,
+                        Language: 'en'
+                    },
+                    ConfigCharacter: {
+                        Height: 60,
+                        Width: 240,
+                        Mode: 2,
+                        ComplexOfNoiseText: 0,
+                        ComplexOfNoiseDot: 0,
+                        IsUseSimpleFont: true,
+                        IsShowHollowLine: false,
+                        IsShowNoiseDot: false,
+                        IsShowNoiseText: false,
+                        IsShowSlimeLine: false,
+                        IsShowSineLine: false,
+                        CaptchaLen: 6,
+                        BgColor:{R:3, G:102, B:214, A:255}
+                    },
+                    ConfigDigit: {
+                        Height: 80,
+                        Width: 240,
+                        CaptchaLen: 5,
+                        MaxSkew: 0.7,
+                        DotCount: 80
+                    }
+                }
+
             $('#comment-form').submit(function(e) {
 
                 e.preventDefault();         // avoid executing the actual submit form
@@ -64,8 +103,10 @@
                         document.getElementById("loader").style.display = "none";
                         $("#username").val("");
                         $("#message").val("");
+                        $("#captcha-solution").val("");
                         var comments = JSON.parse(data);
                         displayComments(comments);
+                        generateCaptcha();
                     },
                     error: function(data) {
                         console.log('There is an error');
@@ -75,7 +116,8 @@
             });
 
             $(document).ready(function() {
-               $("#input-publish").attr("disabled", true);
+               $("#publish").attr("disabled", true);
+               $("#captcha-solution").val("");
 
                 $.ajax({
                     type: "get",
@@ -91,89 +133,103 @@
                         console.log(data);
                     }
                 });
-
-                function displayComments(json_data) {
-                    console.log('Received data success.');
-                    console.log(json_data);
-                    var comment = "";
-                    var list = $("<ul>");
-    
-                    for (var i = 0; i < json_data.length; i++) {
-                        comment = "<img src='./images/avatar.png'/>" +
-                        "<h3>" + json_data[i]['name'] + "</h3>" +
-                        "<h4>" + json_data[i]['date'] + "</h4>" +
-                        "<p>" + json_data[i]['comment'] + "</p>";
-                        
-                        var item = $("<li>").html(comment);
-                        list.append(item);
-                    }
-                    $("#comment-area").html(list);
-                }
-                
-                function generateCaptcha() {
-                    console.log('Generating captcha');
-                    const url = 'api/getCaptcha';
-                    var blob = "";
-                    let form = {
-                        CaptchaType: "character",
-                        Id: '',
-                        VerifyValue: '',
-                        ConfigAudio: {
-                            CaptchaLen: 6,
-                            Language: 'en'
-                        },
-                        ConfigCharacter: {
-                            Height: 60,
-                            Width: 240,
-                            Mode: 2,
-                            ComplexOfNoiseText: 0,
-                            ComplexOfNoiseDot: 0,
-                            IsUseSimpleFont: true,
-                            IsShowHollowLine: false,
-                            IsShowNoiseDot: false,
-                            IsShowNoiseText: false,
-                            IsShowSlimeLine: false,
-                            IsShowSineLine: false,
-                            CaptchaLen: 6,
-                            BgColor:{R:3, G:102, B:214, A:255}
-                        },
-                        ConfigDigit: {
-                            Height: 80,
-                            Width: 240,
-                            CaptchaLen: 5,
-                            MaxSkew: 0.7,
-                            DotCount: 80
-                        }
-                    }
-
-                    let fetchData = {
-                        method: 'post',
-                        body: JSON.stringify(form),
-                        headers: new Headers()
-                    }
-
-                    fetch(url, fetchData)
-                    .then(function(response){
-                        console.log(" fetch .then");
-                        return response.json();
-                    })
-                    .then(function(data){
-                        console.log(data.captchaId);
-                        form.Id = data.captchaId;
-                        blob = data.data;
-                        displayCaptcha(data);
-                    })
-                    .catch(function(error){
-                        console.log("fetch error: ")
-                        console.log(error);
-                    });
-                }
-
-                function displayCaptcha(captcha) {
-                    let captchaImage = "<h3>Verify you are human</h3>" + "Solve the math problem: <br/>" + "<img src='" + captcha.data + "'/>";
-                    $("#captcha-img").html(captchaImage);
-                }
             });
+
+
+            function displayComments(json_data) {
+                console.log(json_data);
+                var comment = "";
+                var list = $("<ul>");
+    
+                for (var i = 0; i < json_data.length; i++) {
+                    comment = "<img src='./images/avatar.png'/>" +
+                    "<h3>" + json_data[i]['name'] + "</h3>" +
+                    "<h4>" + json_data[i]['date'] + "</h4>" +
+                    "<p>" + json_data[i]['comment'] + "</p>";
+                        
+                    var item = $("<li>").html(comment);
+                    list.append(item);
+                }
+                $("#comment-area").html(list);
+            }
+                
+            function generateCaptcha() {
+                console.log('Generating captcha');
+                const url = 'api/getCaptcha';
+                var blob = "";
+
+                let fetchData = {
+                    method: 'post',
+                    body: JSON.stringify(captchaForm),
+                    headers: new Headers()
+                }
+
+                fetch(url, fetchData)
+                .then(function(response){
+                    console.log(" fetch .then");
+                    return response.json();
+                })
+                .then(function(data){
+                    console.log(data.captchaId);
+                    captchaForm.Id = data.captchaId;
+                    blob = data.data;
+                    displayCaptcha(data);
+                })
+                .catch(function(error){
+                    console.log("fetch error: ")
+                    console.log(error);
+                });
+            }
+
+            function displayCaptcha(captcha) {
+                let captchaImage = "<h3>Verify you are human</h3>" + "Solve the math problem: <br/>" + "<img src='" + captcha.data + "'/>";
+                $("#captcha-img").html(captchaImage);
+            }
+
+            function verifyCaptcha() {
+                console.log("verifyCaptcha");
+                captchaForm.VerifyValue = document.getElementById("captcha-solution").value;
+
+                const url = 'api/verifyCaptcha';
+
+                let fetchData = {
+                    method: 'post',
+                    body: JSON.stringify(captchaForm),
+                    headers: new Headers()
+                }
+
+                fetch(url, fetchData)
+                .then(function(response){
+                    return response.json();
+                })
+                .then(function(data){
+                    console.log(data.msg);
+                    showMessage(data.msg);
+                    if (data.code == "success") {
+                        $("#captcha-verify").attr("disabled", true);
+                        $("#publish").attr("disabled", false);
+                    } else {
+                        console.log(data.code);
+                        $("#publish").attr("disabled", true);
+                        generateCaptcha();
+                    }
+                })
+                .catch(function(error){
+                    console.log("fetch error: ")
+                    console.log(error);
+                });
+            }
+
+            function showMessage(msgText) {
+                console.log("Show message.")
+                let msg = msgText;
+                $(".alert").find('.message').text(msg);
+                $(".alert").fadeIn("slow", function() {
+                    setTimeout(function(){
+                        $(".alert").fadeOut("slow");
+                    }, 3000);
+                });
+            }
  
         </script>
     </body>
