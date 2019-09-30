@@ -1,12 +1,13 @@
-#comment-area {margin: 0; padding: 0;}
  
 #comment-area {
-  margin: 20px;
+  margin: 2px;
+  padding: 0px;
 }
  
 ul {
   list-style-type: none;
-  width: 500px;
+  width: 100%;
+  padding: 0px;
 }
  
 h3 {
@@ -14,7 +15,7 @@ h3 {
 }
 
 h4 {
-    font: bold 12px/1.5 Helvetica, Verdana, sans-serif;
+    font: bold 16px/1.5 Helvetica, Verdana, sans-serif;
   }
 
 li img {

@@ -34,7 +34,8 @@
                     <div class="col-25"></div>
                     <div class="col-75">
                         <div id="captcha-img"></div>
-                        <input type="number" name="captcha-solution" id="captcha-solution" placeholder="Your math solution: " required >
+                        <input type="number" name="captcha-solution" id="captcha-solution" placeholder="Your math solution: " 
+                            pattern="[0-9]*" inputmode="numeric" required >
                         <input type="button" class="captcha-verify" id="captcha-verify" onclick="verifyCaptcha()" value="Verify Value"></div>
                     </div>
                 </div>
@@ -182,7 +183,7 @@
             }
 
             function displayCaptcha(captcha) {
-                let captchaImage = "<h3>Verify you are human</h3>" + "Solve the math problem: <br/>" + "<img src='" + captcha.data + "'/>";
+                let captchaImage = "<p><h3>Verify you are human</h3>" + "<h4>Solve the math problem:</h4> </p>" + "<img src='" + captcha.data + "'/>";
                 $("#captcha-img").html(captchaImage);
             }
 
